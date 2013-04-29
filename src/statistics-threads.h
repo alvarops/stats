@@ -7,8 +7,8 @@
 
 #ifndef STATISTICS_THREADS_H_
 #define STATISTICS_THREADS_H_
-#define ARRAY_SIZE		6000000
-#define NUM_THREADS     6
+#define ARRAY_SIZE		7000000
+#define NUM_THREADS     7
 
 typedef struct {
 	int avg;
@@ -25,5 +25,6 @@ void *thread_build(int **array);
 int thread_starter (void *exe);
 void *pt_build(void *threadid);
 void *pt_stats(void *threadid);
+result pt_summarize();
 
 #endif /* STATISTICS_THREADS_H_ */

@@ -24,12 +24,12 @@ int main() {
 	printf("Start\n");
 
 	build(array, ARRAY_SIZE);
-	for (i = 0; i < ARRAY_SIZE; i++) {
-		//printf("\nArray %d, %d", i, array[i]);
-	}
+//	for (i = 0; i < ARRAY_SIZE; i++) {
+//		printf("\nArray %d, %d", i, array[i]);
+//	}
 	clock_t toc = clock();
 	printf("static build: Elapsed: %f seconds\n",
-				(double) (toc - tic) / CLOCKS_PER_SEC);
+			(double) (toc - tic) / CLOCKS_PER_SEC);
 	tic = clock();
 
 	result r = stats(array, ARRAY_SIZE);
@@ -51,6 +51,11 @@ int main() {
 
 	tic = clock();
 	thread_starter(pt_stats);
+	r = pt_summarize();
+	printf("Avg = %d\n", r.avg);
+	printf("Max = %d\n", r.max);
+	printf("Min = %d\n", r.min);
+
 	toc = clock();
 	printf("dynamic stats: Elapsed: %f seconds\n",
 			(double) (toc - tic) / CLOCKS_PER_SEC);
@@ -100,9 +105,9 @@ int thread_starter(void *exe) {
 		pthread_join(threads[j], &status);
 	}
 
-	for (int i = 0; i < ARRAY_SIZE; i++) {
-		//printf("\n Array built %d", array[i]);
-	}
+//	for (int i = 0; i < ARRAY_SIZE; i++) {
+//		printf("\n Array built %d", array[i]);
+//	}
 
 	return 0;
 }
@@ -122,8 +127,30 @@ void *pt_stats(void *threadid) {
 	int iter = ARRAY_SIZE / NUM_THREADS;
 	int id = (int) threadid;
 	//printf("hello world! From thread %i\n", id);
-	tr[id] = stats(&array[id * iter], iter);
+	result r = stats(&array[id * iter], iter);
+	avgs[id] = r.avg;
+	maxs[id] = r.max;
+	mins[id] = r.min;
+
 	pthread_exit(threadid);
 	return threadid;
+}
+
+result pt_summarize() {
+	result r = { 0, 0, 100 };
+	int i;
+	for (i = 0; i < NUM_THREADS; i++) {
+		if (r.max < maxs[i]) {
+			r.max = maxs[i];
+		}
+		if (r.min > mins[i]) {
+			r.min = mins[i];
+		}
+		r.avg += avgs[i];
+	}
+
+	r.avg /= NUM_THREADS;
+
+	return r;
 }
 
