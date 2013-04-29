@@ -7,7 +7,7 @@
 
 #ifndef STATISTICS_THREADS_H_
 #define STATISTICS_THREADS_H_
-#define ARRAY_SIZE		5
+#define ARRAY_SIZE		5000000
 #define NUM_THREADS     5
 
 typedef struct {
@@ -22,4 +22,7 @@ void build(int *array, int size);
 void *thread_stats(int *array);
 void *thread_build(int **array);
 */
+int thread_starter ();
+void *pt_build(void *threadid);
+
 #endif /* STATISTICS_THREADS_H_ */
