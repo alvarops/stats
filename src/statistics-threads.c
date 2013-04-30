@@ -13,7 +13,7 @@
 
 int array[ARRAY_SIZE];
 result tr[NUM_THREADS];
-int avgs[NUM_THREADS];
+float avgs[NUM_THREADS];
 int maxs[NUM_THREADS];
 int mins[NUM_THREADS];
 
@@ -34,7 +34,7 @@ int main() {
 
 	result r = stats(array, ARRAY_SIZE);
 
-	printf("Avg = %d\n", r.avg);
+	printf("Avg = %.4f\n", r.avg);
 	printf("Max = %d\n", r.max);
 	printf("Min = %d\n", r.min);
 
@@ -43,16 +43,16 @@ int main() {
 	printf("Static stats: Elapsed: %f seconds\n",
 			(double) (toc - tic) / CLOCKS_PER_SEC);
 
-	tic = clock();
+	/*tic = clock();
 	thread_starter(pt_build);
 	toc = clock();
 	printf("dynamic build: Elapsed: %f seconds\n",
 			(double) (toc - tic) / CLOCKS_PER_SEC);
-
+*/
 	tic = clock();
 	thread_starter(pt_stats);
 	r = pt_summarize();
-	printf("Avg = %d\n", r.avg);
+	printf("Avg = %.4f\n", r.avg);
 	printf("Max = %d\n", r.max);
 	printf("Min = %d\n", r.min);
 
@@ -67,7 +67,7 @@ int main() {
 }
 
 result stats(int *array, int size) {
-	result r = { 0, 0, 100 };
+	result r = { 0.0, 0, 1000 };
 	int i;
 	for (i = 0; i < size; i++) {
 		if (r.max < array[i]) {
@@ -88,7 +88,7 @@ void build(int *a, int size) {
 	int i;
 
 	for (i = 0; i < size; i++) {
-		a[i] = rand() % 100;
+		a[i] = rand() % 1000;
 	}
 }
 
@@ -97,7 +97,6 @@ int thread_starter(void *exe) {
 	void * status;
 
 	for (int t = 0; t < NUM_THREADS; t++) {
-		//printf("hello world! from main(). Creating thread %i\n", t);
 		int rc = pthread_create(&threads[t], NULL, exe, (void *) t);
 	}
 
@@ -115,9 +114,8 @@ int thread_starter(void *exe) {
 void *pt_build(void *threadid) {
 	int iter = ARRAY_SIZE / NUM_THREADS;
 	int id = (int) threadid;
-	//printf("hello world! From thread %i\n", id);
 	for (int i = 0; i < iter; i++) {
-		array[id * iter + i] = rand() % 100;
+		array[id * iter + i] = rand() % 1000;
 	}
 	pthread_exit(threadid);
 	return threadid;
@@ -126,7 +124,6 @@ void *pt_build(void *threadid) {
 void *pt_stats(void *threadid) {
 	int iter = ARRAY_SIZE / NUM_THREADS;
 	int id = (int) threadid;
-	//printf("hello world! From thread %i\n", id);
 	result r = stats(&array[id * iter], iter);
 	avgs[id] = r.avg;
 	maxs[id] = r.max;

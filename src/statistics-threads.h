@@ -7,11 +7,11 @@
 
 #ifndef STATISTICS_THREADS_H_
 #define STATISTICS_THREADS_H_
-#define ARRAY_SIZE		7000000
-#define NUM_THREADS     7
+#define ARRAY_SIZE		500
+#define NUM_THREADS     5
 
 typedef struct {
-	int avg;
+	float avg;
 	int max;
 	int min;
 } result;
