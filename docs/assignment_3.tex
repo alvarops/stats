@@ -84,6 +84,7 @@
 \newcommand{\cscript}[2]{
 \begin{itemize}
 \item[]\lstinputlisting[caption=#2,label=#1]{#1.c}
+\item[]\lstinputlisting[caption=Corresponding header file,label=#1.h]{#1.h}
 \end{itemize}
 }
 
@@ -135,8 +136,8 @@
 %	NAME AND CLASS SECTION
 %----------------------------------------------------------------------------------------
 
-\newcommand{\hmwkTitle}{CA\ \#1} % Assignment title
-\newcommand{\hmwkDueDate}{Wednesday,\ March\ 20th,\ 2013} % Due date
+\newcommand{\hmwkTitle}{CA\ \#3} % Assignment title
+\newcommand{\hmwkDueDate}{Monday,\ May\ 6th,\ 2013} % Due date
 \newcommand{\hmwkClass}{Scalable Computing} % Course/class
 \newcommand{\hmwkClassTime}{} % Class/lecture time
 \newcommand{\hmwkClassInstructor}{Dr. John Burns} % Teacher/lecturer
@@ -182,42 +183,35 @@
 \begin{homeworkProblem}
 
 \begin{homeworkSection}{Part 1:}
-Derive the best, worst AND average case O estimates for this sorting function.\\
+We wish to find the maximum, minimum and mean value in an array of 500 random integers between 0 and 1000. Write a C/C++ program to achieve this. You are NOT permitted to use any libraries for
+this - you must implement all aspects of the program yourself. If you use any libraries you will score 0 for this section. Use the timing methodology from the labs to demonstrate the wall-clock performance of this solution.\\
 \problemAnswer{
-In this case, the main loop will give the Algorithm cost. Outer loop depends on n, and inner loop counts from 0 to the current value of the outer loop index, so indirectly also depends on n. \\
-This is a clear case of a Eqn.~\ref{eqn:i}:
-\begin{equation}
-\label{eqn:i}
-\sum_{i=1}^n n
-\end{equation}
-
-Equation~\ref{eqn:i} can be represented as Equation~\ref{eqn:j}:
-\begin{equation}
-\label{eqn:j}
-(n + 1)*n/2
-\end{equation}
-
-Which can be simplified to Equation~\ref{eqn:k}:
-\begin{equation}
-\label{eqn:k}
-n^2
-\end{equation}
-
-So in all cases the cost will be:
-\begin{equation}
-\label{eqn:o}
-O(n^2)
-\end{equation}
+Listing \ref{noscal/statistics-threads} shows the algorithm implementation in C. The problem has been divided in three functions:
+\begin{itemize}
+\item The \emph{main} function, that schedules the calls to the other functions, sets the timers up and displays the results.
+\item The \emph{build} function, that with calls to the mathematical pseudo random numbers generatior \emph{rand()} initializes the integer array.
+\item The \emph{stats} function, that collects the max value, min and average.
+\end{itemize}
+In order to collect the results, a struct has been implemented as can be seen in Listing \ref{noscal/statistics-threads.h}. The loop printing the results has been commented out.\\
+The results are as follows: \\
+Start\\
+Avg = 47\\
+\\
+Max = 99\\
+\\
+Min = 0\\
+Static: Elapsed: 0.000082 seconds\\
 }
+\cscript{noscal/statistics-threads}{C source file}
 \end{homeworkSection}
 \begin{homeworkSection}{Part 2:}
-Is this algorithm sensitive to input data permutation (or ordering)? Explain your answer.\\
+Next, discuss in no less than 500 words how each and every part of your program could be executed in parallel.\\
 \problemAnswer{
-The cost will not change, as it will perform all comparisons no matter the status of the array. There is not a flag that indicates there has not been a swap at some point, so the algorithm would stop, and perform better in the best cases.
+
 }
 \end{homeworkSection}
 \begin{homeworkSection}{Part 3.}
-Discuss how this algorithm compares to the sorting methodology of the Selection sort we saw in the lecture notes. Give an example.\\
+Using pthreads, implement your analysis from part 2. to build a parallel solution. Demonstrate the results of this in your answer PDF to show the maximum, minimum and mean are correct. To do this, it is best to run the serial code followed by the parallel code. In this section you will be marked on correctness of the solution. You must make sure that workload is evenly distributed across threads and the threads must all execute separate and independent computations.\\
 \problemAnswer{
 Even though both Selection Sort and this algorithm have the same cost, Selection Sort performs better in writing count, making only 2 n writings in the average case. For example we can use the following array, where each line represents a cycle of the outer loop:\\
 \emph{Selection Sort}\\
@@ -235,23 +229,6 @@ Even though both Selection Sort and this algorithm have the same cost, Selection
 1 2 4 5 6 3\\
 1 2 3 4 5 6}
 \end{homeworkSection}
-\end{homeworkProblem}
-%----------------------------------------------------------------------------------------
-%	PROBLEM 2
-%----------------------------------------------------------------------------------------
-\begin{homeworkProblem}
-Implement the above algorithm in C or C++ making sure your program outputs the unsorted data followed by sorted output.
-You may modify the algorithm only to the extent of adding relevant supporting functions, some additional lines etc. Obviously you will need to
-include your own implementation of FillRandomData and swap. Please do not extensively alter the algorithm critical operations.
-You must use the gcc or g++ compiler no other compiler technology will be accepted. If you used any special command line compile flags (such as stdc99= or -lm) you need to include this at the top of the source code.
-
-\problemAnswer{
-Attached to this pdf file, can be found the source code of sort.c and its header file sort.h. The methods added to the algorithm are \textit{build} and \textit{swap}, whose cost is \textit{O(n)} and \textit{O(1)} respectively.
-Listing \ref{sort/sort} shows the algorithm implementation in C.
-}
-\cscript{sort/sort}{Sample C Script With Highlighting}
-
-
 \end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
