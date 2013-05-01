@@ -18,10 +18,6 @@ typedef struct {
 
 result stats(int *array, int size);
 void build(int *array, int size);
-/*
-void *thread_stats(int *array);
-void *thread_build(int **array);
-*/
 int thread_starter (void *exe);
 void *pt_build(void *threadid);
 void *pt_stats(void *threadid);

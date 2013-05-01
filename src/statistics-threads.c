@@ -18,13 +18,12 @@ int maxs[NUM_THREADS];
 int mins[NUM_THREADS];
 
 int main() {
-	int i;
 	clock_t tic = clock();
 
 	printf("Start\n");
 
 	build(array, ARRAY_SIZE);
-//	for (i = 0; i < ARRAY_SIZE; i++) {
+//	for (int i = 0; i < ARRAY_SIZE; i++) {
 //		printf("\nArray %d, %d", i, array[i]);
 //	}
 	clock_t toc = clock();
@@ -68,8 +67,7 @@ int main() {
 
 result stats(int *array, int size) {
 	result r = { 0.0, 0, 1000 };
-	int i;
-	for (i = 0; i < size; i++) {
+	for (int i = 0; i < size; i++) {
 		if (r.max < array[i]) {
 			r.max = array[i];
 		}
@@ -85,9 +83,7 @@ result stats(int *array, int size) {
 }
 
 void build(int *a, int size) {
-	int i;
-
-	for (i = 0; i < size; i++) {
+	for (int i = 0; i < size; i++) {
 		a[i] = rand() % 1000;
 	}
 }
@@ -135,8 +131,7 @@ void *pt_stats(void *threadid) {
 
 result pt_summarize() {
 	result r = { 0, 0, 100 };
-	int i;
-	for (i = 0; i < NUM_THREADS; i++) {
+	for (int i = 0; i < NUM_THREADS; i++) {
 		if (r.max < maxs[i]) {
 			r.max = maxs[i];
 		}
