@@ -36,7 +36,7 @@
 % Set up the header and footer
 \pagestyle{fancy}
 \lhead{\hmwkAuthorName} % Top left header
-\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle} % Top center head
+\chead{\hmwkClass\ (\hmwkClassInstructor): \hmwkTitle} % Top center head
 \rhead{\firstxmark} % Top right header
 \lfoot{\lastxmark} % Bottom left footer
 \cfoot{} % Bottom center footer
@@ -109,7 +109,7 @@
 \newcounter{homeworkProblemCounter} % Creates a counter to keep track of the number of problems
 
 \newcommand{\homeworkProblemName}{}
-\newenvironment{homeworkProblem}[1][Question \arabic{homeworkProblemCounter}]{ % Makes a new environment called homeworkProblem which takes 1 argument (custom name) but the default is "Problem #"
+\newenvironment{homeworkProblem}[1][Q. \arabic{homeworkProblemCounter}]{ % Makes a new environment called homeworkProblem which takes 1 argument (custom name) but the default is "Problem #"
 \stepcounter{homeworkProblemCounter} % Increase counter for number of problems
 \renewcommand{\homeworkProblemName}{#1} % Assign \homeworkProblemName the name of the problem
 \section{\homeworkProblemName} % Make a section in the document with the custom problem count
@@ -202,7 +202,7 @@ Max = 99\\
 Min = 0\\
 Static: Elapsed: 0.000082 seconds\\
 }
-\cscript{noscal/statistics-threads}{C source file}
+\cscript{noscal/statistics-threads}{No parallel implementation in C.}
 \end{homeworkSection}
 \begin{homeworkSection}{Part 2:}
 Next, discuss in no less than 500 words how each and every part of your program could be executed in parallel.\\
@@ -213,7 +213,18 @@ Next, discuss in no less than 500 words how each and every part of your program 
 \begin{homeworkSection}{Part 3.}
 Using pthreads, implement your analysis from part 2. to build a parallel solution. Demonstrate the results of this in your answer PDF to show the maximum, minimum and mean are correct. To do this, it is best to run the serial code followed by the parallel code. In this section you will be marked on correctness of the solution. You must make sure that workload is evenly distributed across threads and the threads must all execute separate and independent computations.\\
 \problemAnswer{
-Even though both Selection Sort and this algorithm have the same cost, Selection Sort performs better in writing count, making only 2 n writings in the average case. For example we can use the following array, where each line represents a cycle of the outer loop:\\
+The implementation discussed in can be read in Listing \ref{../src/statistics-threads}\\
+The result is:\\
+Start\\
+static build: Elapsed: 0.000049 seconds\\
+Avg = 508.8200\\
+Max = 997\\
+Min = 0\\
+Static stats: Elapsed: 0.000009 seconds\\
+Avg = 508.8200\\
+Max = 997\\
+Min = 0\\
+dynamic stats: Elapsed: 0.000385 seconds\\
 \emph{Selection Sort}\\
 2 6 5 1 4 3\\
 1 6 5 2 4 3\\
@@ -228,6 +239,8 @@ Even though both Selection Sort and this algorithm have the same cost, Selection
 1 2 5 6 4 3\\
 1 2 4 5 6 3\\
 1 2 3 4 5 6}
+\cscript{../src/statistics-threads}{Parallel implementation in C.}
+
 \end{homeworkSection}
 \end{homeworkProblem}
 
