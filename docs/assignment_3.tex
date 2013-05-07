@@ -22,6 +22,7 @@
 \usepackage{graphicx} % Required to insert images
 \usepackage{listings} % Required for insertion of code
 \usepackage{courier} % Required for the courier font
+\usepackage{caption}
 
 % Margins
 \topmargin=-0.45in
@@ -207,13 +208,33 @@ Static: Elapsed: 0.000082 seconds\\
 \begin{homeworkSection}{Part 2:}
 Next, discuss in no less than 500 words how each and every part of your program could be executed in parallel.\\
 \problemAnswer{
+The program listed in Listing \ref{noscal/statistics-threads} can be divided in two main phases: setup of the array with random integers, and the processing of that array, extracting the required statistics. There is a clear opportunity to parallelize each phase. \\
+In order to parallelize the array building, the build method needs to be prepared for multithreading. To achieve that, the array will be sliced in as many subdivisions as threads are required, so each thread will access a given subdivision of the array. Ideally the size of the array, and the number of threads should be divisible, so all subdivisions are the same size.\\
+The Listing \ref{../src/statistics-threads} in line 110 displays the implementation of the array start up with random numbers in a parallelized manner.\\
+In order to run it, a thread starter method has been implemented, and can be read from the line 91 onwards. That method will also been called at other stages of the program, with the phase method as parameter.\\
+The second phase is the processing of the array. There are two main approaches to solve the problem:
+\begin{itemize}
+\item Use one loop for each phase of the statistics, one to get the maximum value, next loop to get the minimum value and one final, to get the average value. 
+\item Perform all calculations in one single loop. 
+\end{itemize}
+Even though there are three loops in the first proposal, its theoretic cost would be the same as the second: O(n) and the implementation is the simplest. On the other hand, the second implementation is shorter in lines of code and therefore will feature less bugs, more powerful and scalable code.
+There are three main ways to parallelize this second phase. 
+\begin{itemize}
+\item One would be using one thread for each loop, having three threads calculating the maximum, minimum and average respectively. 
+\item The second one would be slicing the array again in as many subdivisions as threads, performing all of them the maximum calculation, then the minimum and finally the average. That could be done with a join between each loop, having three phases of thread creation for each slice, or using one final join, once the calculation work is done, which is more optimum. 
+\item Finally, the third approach would be useful in a massively parallelized environment, where multiple threads can be used seamlessly; in that case the workload could be divided horizontally, slicing the original array in as many subdivisions as one third of the processors available, and vertically, letting three threads access to the same values, one of each performing one of the main calculations (maximum, minimum and average). 
+\end{itemize}
+Of the three solutions proposed, the first approach is the less scalable, as if there were more processors or threads, they would not be used. The third one is the most powerful and difficult to implement, given the complexity of the main problem, and the fact that current available CPUs feature up to 8 cores, could seem like overkill. 
+After this second phase, there will be the summary, where the results of each thread are merged in the final response.
 
+The implementation and execution with CUDA of the horizontal and vertical scalability would be a interesting future line of investigation.
 }
+
 \end{homeworkSection}
 \begin{homeworkSection}{Part 3.}
 Using pthreads, implement your analysis from part 2. to build a parallel solution. Demonstrate the results of this in your answer PDF to show the maximum, minimum and mean are correct. To do this, it is best to run the serial code followed by the parallel code. In this section you will be marked on correctness of the solution. You must make sure that workload is evenly distributed across threads and the threads must all execute separate and independent computations.\\
 \problemAnswer{
-The implementation discussed in can be read in Listing \ref{../src/statistics-threads}\\
+The implementation discussed in the second Part of this assignment, can be read in Listing \ref{../src/statistics-threads}\\
 The result is:\\
 Start\\
 static build: Elapsed: 0.000049 seconds\\
@@ -225,20 +246,7 @@ Avg = 508.8200\\
 Max = 997\\
 Min = 0\\
 dynamic stats: Elapsed: 0.000385 seconds\\
-\emph{Selection Sort}\\
-2 6 5 1 4 3\\
-1 6 5 2 4 3\\
-1 2 5 6 4 3\\
-1 2 3 6 4 5\\
-1 2 3 4 6 5\\
-1 2 3 4 5 6\\
-\emph{Algorithm Sort}\\
-2 6 5 1 4 3\\
-2 6 5 1 4 3\\
-2 5 6 1 4 3\\
-1 2 5 6 4 3\\
-1 2 4 5 6 3\\
-1 2 3 4 5 6}
+}
 \cscript{../src/statistics-threads}{Parallel implementation in C.}
 
 \end{homeworkSection}
